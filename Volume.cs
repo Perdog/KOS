@@ -71,7 +71,7 @@ namespace kOS
             Renameable = false;
             Name = "Archive";
 
-            loadAll();
+            LoadAll();
         }
 
         public override bool IsRoomFor(File newFile)
