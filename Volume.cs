@@ -13,6 +13,13 @@ namespace kOS
         public String Name = "";
         public List<File> Files = new List<File>();
         public bool Renameable = true;
+        public String Directory
+        {
+            get
+            {
+                return HighLogic.fetch.GameSaveFolder + "/" + Name;
+            }
+        }
 
         public File GetByName(String name)
         {
@@ -46,6 +53,12 @@ namespace kOS
 
         public virtual int GetFreeSpace() { return -1; }
         public virtual bool IsRoomFor(File newFile) { return true; }
+        public virtual void LoadAll()
+        {
+            Files.Clear();
+
+            Files = HarddiskLoader.LoadFiles(Name);
+        }
         public virtual void LoadPrograms(List<File> programsToLoad) { }
         public virtual ConfigNode Save(string nodeName) { return new ConfigNode(nodeName); }
     }
@@ -65,8 +78,10 @@ namespace kOS
             return true;
         }
 
-        private void loadAll()
+        public override void loadAll()
         {
+            base.LoadAll();
+            /*
             Files.Clear();
 
             try
@@ -92,6 +107,7 @@ namespace kOS
             catch (Exception)
             {
             }
+            */
         }
 
         public override bool SaveFile(File file)
