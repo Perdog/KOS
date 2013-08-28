@@ -79,7 +79,7 @@ namespace kOS
             return true;
         }
 
-        public override void loadAll()
+        public override void LoadAll()
         {
             base.LoadAll();
             /*
