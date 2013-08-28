@@ -15,6 +15,7 @@ namespace kOS
         public bool Renameable = true;
         public String Directory
         {
+            // This is just a simple way to get a pointer to the volumes directory
             get
             {
                 return HighLogic.fetch.GameSaveFolder + "/" + Name;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -177,6 +178,41 @@ namespace kOS
             }
 
             throw new kOSException("Unrecognized renamable object type '" + operation + "'");
+        }
+    }
+
+    [CommandAttribute(@"^RELOAD (ALL|VOLUME) (.+?)$")]
+    public class CommandReload : Command
+    {
+        public CommandReload(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+
+        public override void Evaluate()
+        {
+            String reloadType = RegexMatch.Groups[1].Value.Trim();
+            String identifier = RegexMatch.Groups[2].Value.Trim();
+
+            switch(reloadType)
+            {
+                case "ALL":
+                    String[] allDisks = Directory.GetDirectories(HighLogic.fetch.GameSaveFolder);
+                    // We clear all volumes currently being tracked
+                    Cpu.Volumes.Clear();
+                    foreach (String disk in allDisks)
+                    {
+                        // And replace them one by one
+                        Cpu.Volumes.Add(HarddiskLoader.LoadHarddisk(disk));
+                    }
+                    break;
+
+                case "VOLUME":
+                    // Try to get the volume
+                    Volume vol = GetVolume(identifier);
+                    // If found, reload and replace
+                    vol.Files = HarddiskLoader.LoadFiles(identifier);
+                    break;
+            }
+
+            State = ExecutionState.DONE;
         }
     }
     
