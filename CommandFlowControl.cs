@@ -39,7 +39,7 @@ namespace kOS
             }
         }
 
-        public void Break()
+        new public void Break()
         {
             commands.Clear();
             State = ExecutionState.DONE;
